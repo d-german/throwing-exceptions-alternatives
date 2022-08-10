@@ -6,15 +6,6 @@ public static class MainController
 {
     public static Result<MilesPerGallon> GetMilesPerGallon(double miles, double gallons)
     {
-        if (gallons == 0)
-        {
-            return new Result<MilesPerGallon>
-            {
-                Value = null,
-                ErrorMessage = "Gallons must != 0"
-            };
-        }
-
         if (miles < 0 || gallons < 0)
         {
             return new Result<MilesPerGallon>
@@ -24,14 +15,35 @@ public static class MainController
             };
         }
 
-        return new Result<MilesPerGallon>
+        try
         {
-            Value = new MilesPerGallon
+            BuggyService(miles, gallons);
+            
+            return new Result<MilesPerGallon>
             {
-                Miles = miles,
-                Gallons = gallons,
-                Mpg = miles / gallons
-            }
-        };
+                Value = new MilesPerGallon
+                {
+                    Miles = miles,
+                    Gallons = gallons,
+                    Mpg = miles / gallons
+                }
+            };
+        }
+        catch (Exception e) //anti-pattern??
+        {
+            return new Result<MilesPerGallon>
+            {
+                Value = null,
+                ErrorMessage = e.Message
+            };
+        }
+    }
+
+    private static void BuggyService(double miles, double gallons)
+    {
+        if (gallons == 0)
+        {
+            throw new DivideByZeroException("Miles cannot be 0");
+        }
     }
 }
