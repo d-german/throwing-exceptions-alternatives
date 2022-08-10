@@ -5,29 +5,17 @@ namespace throw_exception_alternative;
 
 public class Tests
 {
-    [Test]
-    public void MpgHappyPath()
+    private static (double miles, double gallons, Result<MilesPerGallon> expectedResult)[] _testCases =
     {
-        var expectedMpGResult = new Result<MilesPerGallon>
-        {
-            Value = new MilesPerGallon { Miles = 100.0, Gallons = 5.0, Mpg = 20.0 }
-        };
+        (miles: 100.0, gallons: 5, new Result<MilesPerGallon> { Value = new MilesPerGallon { Miles = 100.0, Gallons = 5, Mpg = 20.0 } }),
+        (miles: -100.0, gallons: 5, new Result<MilesPerGallon> { ErrorMessage = "Miles and gallons must be >= 0" }),
+    };
 
-        var actualMpgResult = GetMilesPerGallon(miles: 100.0, gallons: 5.0);
-
-        Assert.That(actualMpgResult, Is.EqualTo(expectedMpGResult));
-    }
-
-    [Test]
-    public void MpgNegativeMilesPath()
+    [TestCaseSource(nameof(_testCases))]
+    public void MpgTests((double miles, double gallons, Result<MilesPerGallon> expectedResult) testCase)
     {
-        var expectedMpGResult = new Result<MilesPerGallon>
-        {
-            ErrorMessage = "Miles and gallons must be >= 0"
-        };
+        var actualMpgResult = GetMilesPerGallon(testCase.miles, testCase.gallons);
 
-        var actualMpgResult = GetMilesPerGallon(miles: -100.0, gallons: 5.0);
-
-        Assert.That(actualMpgResult, Is.EqualTo(expectedMpGResult));
+        Assert.That(actualMpgResult, Is.EqualTo(testCase.expectedResult));
     }
 }
