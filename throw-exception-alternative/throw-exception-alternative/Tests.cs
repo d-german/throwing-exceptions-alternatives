@@ -1,4 +1,3 @@
-using throw_exception_alternative.exceptions;
 using throw_exception_alternative.models;
 using static throw_exception_alternative.MainController;
 
@@ -18,6 +17,11 @@ public class Tests
     [Test]
     public void MpgNegativeMilesPath()
     {
-        Assert.Throws<NegativeNumberException>(() => _ = GetMilesPerGallon(miles: -1.0, gallons: 5.0));
+        var actualMpg = GetMilesPerGallon(miles: -100.0, gallons: 5.0);
+        
+        Assert.That(actualMpg, Is.Null);
+        
+        var miles = actualMpg?.Miles; // ?. null-conditional operator
+        Assert.That(miles, Is.Null);
     }
 }
