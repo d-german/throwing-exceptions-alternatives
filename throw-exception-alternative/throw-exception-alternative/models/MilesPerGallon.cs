@@ -2,7 +2,7 @@
 
 public record MilesPerGallon
 {
-    public double Miles { get; init; } = 0;
+    public double Miles { get; init; }
     public double Gallons { get; init; } = 1;
-    public double? Mpg { get; init; } = null;
+    public double? Mpg { get; init; }
 }

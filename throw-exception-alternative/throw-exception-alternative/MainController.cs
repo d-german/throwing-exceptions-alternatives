@@ -18,7 +18,7 @@ public static class MainController
         try
         {
             BuggyService(miles, gallons);
-            
+
             return new Result<MilesPerGallon>
             {
                 Value = new MilesPerGallon
@@ -31,10 +31,11 @@ public static class MainController
         }
         catch (Exception e) //anti-pattern??
         {
+            var message = ExceptionHandlingService.HandleException(e);
             return new Result<MilesPerGallon>
             {
                 Value = null,
-                ErrorMessage = e.Message
+                ErrorMessage = message
             };
         }
     }
