@@ -8,20 +8,26 @@ public class Tests
     [Test]
     public void MpgHappyPath()
     {
-        var expectedMpg = new MilesPerGallon { Miles = 100.0, Gallons = 5.0, Mpg = 20.0 };
-        var actualMpg = GetMilesPerGallon(miles: 100.0, gallons: 5.0);
+        var expectedMpGResult = new Result<MilesPerGallon>
+        {
+            Value = new MilesPerGallon { Miles = 100.0, Gallons = 5.0, Mpg = 20.0 }
+        };
 
-        Assert.That(actualMpg, Is.EqualTo(expectedMpg));
+        var actualMpgResult = GetMilesPerGallon(miles: 100.0, gallons: 5.0);
+
+        Assert.That(actualMpgResult, Is.EqualTo(expectedMpGResult));
     }
 
     [Test]
     public void MpgNegativeMilesPath()
     {
-        var actualMpg = GetMilesPerGallon(miles: -100.0, gallons: 5.0);
-        
-        Assert.That(actualMpg, Is.Null);
-        
-        var miles = actualMpg?.Miles; // ?. null-conditional operator
-        Assert.That(miles, Is.Null);
+        var expectedMpGResult = new Result<MilesPerGallon>
+        {
+            ErrorMessage = "Miles and gallons must be >= 0"
+        };
+
+        var actualMpgResult = GetMilesPerGallon(miles: -100.0, gallons: 5.0);
+
+        Assert.That(actualMpgResult, Is.EqualTo(expectedMpGResult));
     }
 }

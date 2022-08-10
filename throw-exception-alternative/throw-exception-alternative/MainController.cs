@@ -4,25 +4,34 @@ namespace throw_exception_alternative;
 
 public static class MainController
 {
-    public static MilesPerGallon? GetMilesPerGallon(double miles, double gallons)
+    public static Result<MilesPerGallon> GetMilesPerGallon(double miles, double gallons)
     {
         if (gallons == 0)
         {
-            //log error gallons must != 0"
-            return null;
+            return new Result<MilesPerGallon>
+            {
+                Value = null,
+                ErrorMessage = "Gallons must != 0"
+            };
         }
 
         if (miles < 0 || gallons < 0)
         {
-            //log error miles and gallons must be >= 0"
-            return null;
+            return new Result<MilesPerGallon>
+            {
+                Value = null,
+                ErrorMessage = "Miles and gallons must be >= 0"
+            };
         }
 
-        return new MilesPerGallon
+        return new Result<MilesPerGallon>
         {
-            Miles = miles,
-            Gallons = gallons,
-            Mpg = miles / gallons
+            Value = new MilesPerGallon
+            {
+                Miles = miles,
+                Gallons = gallons,
+                Mpg = miles / gallons
+            }
         };
     }
 }
