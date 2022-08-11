@@ -1,6 +1,6 @@
 ﻿namespace throw_exception_alternative.exceptions;
 
-public class CannotBeZeroException : System.ArgumentOutOfRangeException
+public class CannotBeZeroException : ArgumentOutOfRangeException
 {
     public CannotBeZeroException(string parameter): base(parameter, "value cannot be 0")
     {
