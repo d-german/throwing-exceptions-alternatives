@@ -1,4 +1,4 @@
-﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+﻿
 namespace throw_exception_alternative.models;
 
 public record MilesPerGallon
