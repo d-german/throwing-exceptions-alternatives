@@ -18,18 +18,12 @@ public static class AuthService
     {
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
-            return new Result<User>
-            {
-                ErrorMessage = "Username and password must not be empty"
-            };
+            // TODO: return Result with error message instead of throwing exception
         }
 
         if (username != "admin" || password != "password")
         {
-            return new Result<User>
-            {
-                ErrorMessage = "Invalid username or password"
-            };
+            // TODO: return Result with error message instead of throwing exception
         }
 
         return new Result<User>
