@@ -1,24 +1,9 @@
 namespace throw_exception_alternative;
 
-public class CustomUnauthorizedException : Exception
+public record Result<T>
 {
-    public CustomUnauthorizedException()
-        : base("Unauthorized: Invalid username or password")
-    {
-        // Empty body
-    }
-
-    public CustomUnauthorizedException(string message)
-        : base(message)
-    {
-        // Empty body
-    }
-
-    public CustomUnauthorizedException(string message, Exception inner)
-        : base(message, inner)
-    {
-        // Empty body
-    }
+    public T? Value { get; init; }
+    public string? ErrorMessage { get; set; }
 }
 
 public record User
@@ -29,22 +14,31 @@ public record User
 
 public static class AuthService
 {
-    public static User Authenticate(string? username, string? password)
+    public static Result<User> Authenticate(string username, string password)
     {
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
-            throw new ArgumentException("Username and password must not be empty");
+            return new Result<User>
+            {
+                ErrorMessage = "Username and password must not be empty"
+            };
         }
 
         if (username != "admin" || password != "password")
         {
-            throw new CustomUnauthorizedException("Invalid username or password");
+            return new Result<User>
+            {
+                ErrorMessage = "Invalid username or password"
+            };
         }
 
-        return new User
+        return new Result<User>
         {
-            Username = username,
-            Password = password
+            Value = new User
+            {
+                Username = username,
+                Password = password
+            }
         };
     }
 }
@@ -54,23 +48,25 @@ public class Tests
     [Test]
     public void TestHappyPath()
     {
-        var user = AuthService.Authenticate("admin", "password");
+        Result<User> user = AuthService.Authenticate("admin", "password");
         Assert.Multiple(() =>
         {
-            Assert.That(user.Username, Is.EqualTo("admin"));
-            Assert.That(user.Password, Is.EqualTo("password"));
+            Assert.That(user.Value?.Username, Is.EqualTo("admin")); // note the ? after Value
+            Assert.That(user.Value?.Password, Is.EqualTo("password")); // note the ? after Value
         });
     }
 
     [Test]
     public void TestEmptyUsername()
     {
-        Assert.Throws<ArgumentException>(() => { AuthService.Authenticate("", "password"); });
+        Result<User> user = AuthService.Authenticate("", "password");
+        Assert.That(user.ErrorMessage, Is.EqualTo("Username and password must not be empty"));
     }
 
     [Test]
     public void TestNonAdmin()
     {
-        Assert.Throws<CustomUnauthorizedException>(() => { AuthService.Authenticate("user555", "password"); });
+        Result<User> user = AuthService.Authenticate("user555", "password");
+        Assert.That(user.ErrorMessage, Is.EqualTo("Invalid username or password"));
     }
 }
