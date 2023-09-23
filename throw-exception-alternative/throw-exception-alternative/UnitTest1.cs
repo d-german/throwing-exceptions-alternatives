@@ -1,4 +1,5 @@
 namespace throw_exception_alternative;
+// TODO: Create a CustomUnauthorizedException class that inherits from Exception
 
 public record User
 {
